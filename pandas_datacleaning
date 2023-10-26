@@ -1,0 +1,67 @@
+import pandas as pd
+#https://github.com/AlexTheAnalyst/PandasYouTubeSeries/blob/main/Customer%20Call%20List.xlsx
+df = pd.read_excel(r"/Users/andon/Documents/python data sets/Customer Call List.xlsx")
+
+# remove duplicates first
+df = df.drop_duplicates()
+
+#drop unwanted columns
+df = df.drop(columns = "Not_Useful_Column")
+
+#remove incorrect format of text, numbers etc
+#below are to get rid of  .., / and _ separately from column last_name
+df["Last_Name"] = df["Last_Name"].str.lstrip('...')
+df["Last_Name"] = df["Last_Name"].str.lstrip('/')
+df["Last_Name"] = df["Last_Name"].str.rstrip('_')
+
+#same can be achieved using the below code
+df["Last_Name"] = df["Last_Name"].str.strip('123./_')
+
+#format phone number
+#first we will remove - or any character in phone number, all numbers should be just numbers
+df["Phone_Number"] = df["Phone_Number"].str.replace(r'[^a-zA-Z0-9]','', regex = True)
+
+#use lambda function to apply a - after 3 digits in the number
+#first we need to convert it to string to apply string function
+df['Phone_Number'] = df['Phone_Number'].apply(lambda x:str(x))
+df['Phone_Number'] = df['Phone_Number'].apply(lambda x: x[0:3]+'-'+x[3:6]+'-'+x[6:10])
+
+#need to remove nan, nan-- etc from phone number columns
+df["Phone_Number"] = df["Phone_Number"].str.replace('nan--','')
+df["Phone_Number"] = df["Phone_Number"].str.replace('Na--','')
+
+#split address into 3 different strings separated by column and assign it to new columns
+df[["Street_Address", "State", "Zip_Code"]] = df["Address"].str.split(',',n=2, expand=True)
+
+#make columns consistent, some have yes, some Y, no, n etc
+df["Paying Customer"] = df["Paying Customer"].str.replace('Yes','Y')
+df["Paying Customer"] = df["Paying Customer"].str.replace('No','N')
+
+df["Do_Not_Contact"] = df["Do_Not_Contact"].str.replace('No','N')
+df["Do_Not_Contact"] = df["Do_Not_Contact"].str.replace('Yes','Y')
+
+# below code is to replace nan and n/a to null, but it will never work 
+#df.replace('NaN','')
+#df.replace('N/a','')
+
+#right code to achieve above
+df.fillna('')
+
+
+#we only need to get the rows that has phone number and donotcontact field is not Y
+for x in df.index:
+    if df.loc[x,"Do_Not_Contact"] == "Y":
+        df.drop(x,inplace=True)
+
+
+#we only need to get the rows that has phone number and donotcontact field is not Y
+for x in df.index:
+    if df.loc[x,"Phone_Number"] == "":
+        df.drop(x,inplace=True)
+
+#to reset index in order to avoid random numbers in the index
+df.reset_index()
+
+#to drop the initial index in the table above
+df.reset_index(drop=True) 
+
