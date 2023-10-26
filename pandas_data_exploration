@@ -1,0 +1,84 @@
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+#https://github.com/AlexTheAnalyst/PandasYouTubeSeries/blob/main/world_population.csv
+df = pd.read_csv(r'/Users/andon/Documents/python data sets/world_population.csv')
+
+#to make the decimal point two
+pd.set_option('display.float_format', lambda x: '%.2f' % x)
+
+#info about datafrane
+#df.info()
+
+
+#for highlevel description of dataframe like cont, mean,  sd, min, max etc, 
+df.describe()
+
+#will give number of columns that has null values
+#this is important to know while doing data cleaning
+df.isnull().sum() 
+
+#how many unique values in each column
+df.nunique()
+
+#gives top few populated rows based on 2022 population, ascending order
+df.sort_values(by="2022 Population").head()
+
+#descending order
+df.sort_values(by="2022 Population", ascending=False).head()
+
+#correlation
+df.corr() #this will give error as there are many non numeric columns, so we need to fetch only columns that has numeric value
+
+#print columns to easily copy column name with numberic content to find mean
+#df.columns
+
+#columns copied from df.columns
+df2 = df[['2022 Population','2020 Population', '2015 Population','2010 Population','2000 Population','1990 Population','1980 Population','1970 Population','Area (km²)','Density (per km²)','Growth Rate','World Population Percentage']]
+#this will give correlation of columns against each columns
+df2.corr()
+
+#gives heatmap chart of correlation
+sns.heatmap(df2.corr(), annot = True)
+
+#group by continent and find mean, as mean is numeric, we need to select just numeric columns
+df3 = df.groupby('Continent')[['Rank','1970 Population',
+       '1980 Population', '1990 Population', '2000 Population',
+       '2010 Population', '2015 Population', '2020 Population',
+       '2022 Population']].mean()
+df3
+#oceania is a continent - below will give all the rows that has continent oceania
+df[df['Continent'].str.contains('Oceania')]
+
+#sort by 2022 population descending order
+df3.groupby('Continent')[['Rank','1970 Population',
+       '1980 Population', '1990 Population', '2000 Population',
+       '2010 Population', '2015 Population', '2020 Population',
+       '2022 Population']].mean().sort_values(by="2022 Population", ascending=False)
+
+#basic plot
+df3.plot()
+
+#as its grouped by continent, it will have continent names as x axis and population as index in the graph
+#to make it other way we can transpose
+
+df4 = df3.transpose()
+#this will make population as index in dataframe
+
+#below will give plot with continents in x axis
+df4.plot(figsize=(20, 12))
+
+
+#boxplot - used to find values that are outside normal values
+df.boxplot(figsize=(20,10))
+
+
+#above to find mean we were explicitly giving numeric columns to df. We can actually find numeric columns or string types using dtypes
+#this gives data types of each field
+df.dtypes
+
+#types are object, float etc, so we can use below code to fetch just that columns, see below
+df.select_dtypes(include="object")
+df.select_dtypes(include="float")
+
+#instead of giving explicitly the column names to fetch just numeric columns to find mean above, we could have used the above code
