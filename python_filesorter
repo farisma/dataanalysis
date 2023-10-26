@@ -1,0 +1,22 @@
+#program to list files in a folder and create respective folders for each file type and put them in that folders
+import os, shutil
+path = r"/Users/andon/Documents/filesort/"
+print(path)
+
+#to list all files in the path given
+
+os.listdir(path)
+folder_names = {"images":"images","js":"js","pdf":"pdf"} - dictionary of folder names for each file types
+for key in folder_names:
+    if not os.path.exists(path + folder_names[key]):
+       os.makedirs(path + folder_names[key])
+
+#loop through each file and check file type and if it exists in corresponding folder, if not move
+filenames = os.listdir(path)
+for file in filenames:
+    if ".png" in file and not os.path.exists(path + folder_names['images'] +"/"+ file):
+        shutil.move(path + file, path + "images/"+ file)
+    elif ".js" in file and not os.path.exists(path + folder_names['js']  +"/"+ file):
+        shutil.move(path + file, path + "js/"+ file)
+    elif ".pdf" in file and not os.path.exists(path + folder_names['pdf']  +"/"+ file):
+        shutil.move(path + file, path + "pdf/"+ file)
