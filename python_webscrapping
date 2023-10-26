@@ -1,0 +1,61 @@
+from bs4 import BeautifulSoup
+import requests
+
+url = "https://www.scrapethissite.com/pages/forms"
+
+page = requests.get(url)
+
+soup = BeautifulSoup(page.text, 'html')
+
+#first div is returned
+soup.find('div')
+
+#all divs are returned
+soup.find_all('div')
+
+#return diovs with class col-md-...
+soup.find_all('div',class_ = "col-md-12") 
+#soup.find_all('p',class_ = "lead")
+
+#fetch the value of th
+soup.find('th').text.strip() 
+
+---------------------------------
+#another example
+from bs4 import BeautifulSoup
+import requests
+
+url = "https://en.wikipedia.org/wiki/List_of_largest_companies_of_the_United_Arab_Emirates"
+
+page = requests.get(url)
+soup = BeautifulSoup(page.text,'html')
+
+#fetch first table from the list
+companieslist = soup.find_all('table')[1] 
+
+#fetch all titles
+titles = companieslist.find_all('th')
+
+#looping through a list and putting values into another list, loop throgh title in titles and fetch the text and assign it to another list
+titlestext = [title.text.strip() for title in titles]
+
+import pandas as pd
+#create a dataframe with below tiles as columns
+df= pd.DataFrame(columns = titlestext)
+
+#find data from table to populate dataframe
+column_data = companieslist.find_all('tr')
+
+loop through each row and each columns in each row and assign it to dataframe by checking length of dataframe
+for row in column_data[1:]: #no need of first row as that is titles which is alreasdy added to dataframe pandas
+    row_data = row.find_all('td')
+    ind_raw_data = [data.text.strip() for data in row_data]
+    print(ind_raw_data)
+    length = len(df)
+    #print(length)
+    #each column is added to current row
+    df.loc[length] = ind_raw_data
+    #print(df)
+
+#save this in a csv
+df.to_csv("/Users/andon/Documents/filesort/compaies_uae.csv",index = False)
