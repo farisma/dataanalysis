@@ -1,0 +1,87 @@
+Refernce - https://www.youtube.com/watch?v=npgbI8KYvN8 
+Things mentioned below - Excel, Business metrics, Mean, Media, Mode, Variance, Standard Deviation, Correlation
+- Excel
+expense sheet example
+date drag to copy paste the date series, Jan 1 - drag to fill other months
+=sum formulae to find sum
+=unique to show the unique values in columns (categorise expenses)
+=sumif to find sum of expense in each category
+
+By default it will be just cells and rows
+we can select the data part and insert table from top menu to convert it to a table
+This will allow you to do more things with the cells and make it dynamic
+
+We can name tables as well to address and use it.
+This will make it easier to find sum mentioned above. Before we need to mention column names, A1-A12 etc inside the sum formulae.
+if a new row is added, it wont reflect the sum in above case.
+With table, we can say sum(table name[columnname]), this will always calculate the sum of elements
+in the column if we add more rows later.
+
+You can add slicer as well for tables for categories rows. This can let you categorically filter rows by pressing each category.
+
+There is something called table design if we select table on the menu on top, 
+from there we can insert total table as well, then we can select sum, avg, count etc
+so we dont really need to explicitly put the sum formulae
+
+Example:
+There is a table with all bollywood and hollywood data, with budget and revenue in billions, millions, int, dollar etc
+Need to create extra columns to convert them to a common currency and common unit
+then find sum, count, avg etc
+New column1: IF(currency = INR, amount * 80) - comnvert to dollars id currency is Inroads
+New column2: IF(unit = million, amount * 1000) - convert to million
+Based on this, we can find total revenue, profit, profit % etc
+
+- Business metrics
+there is a table for all movies in hollywood
+need to find the total budget, revenue, profit/loss %, market share of just marvel studios among all the other 
+
+- Mean media mode
+Mean is average
+sometimes mean may not give the correct impression
+For example, if we are finding the salary mean of group of people in a place to do a market research
+If there is one person who is an outlier(has far more or less salary than the rest), then mean will be not appropriate metric to find insights.
+In that case we will find median
+Median is middle value after sorting the list in ascending order or descending
+if numbner of items is even, then find average of middle numbers
+
+- Mode - is freqently occured value in a column 
+With respect to movie table, it has imdb rating, we can find mean and median, then mode to find which rating occurs most number of times.
+
+
+Variance and Standard Deviation
+Variance is the sum of squares of average differnce between each value with mean
+For example, if we are finding mean of percapita income of two cities.
+may be we get same mean, but in one place all the salaries may be in that range of average
+but in other city, the difference could be huge, some people have high oncome and some have low income
+so income inequalities is higher in that city.
+in such cases, we can find the difference of each value with mean
+we will find mean-income for each salary, this could be -ve and +ve values
+we will square it to make it positive, then find average of these values - this gives the variance
+
+- Standard deviation - square root of variance give standard deviation
+
+--  Case studies of standard deviation and variance
+--- selectig right school for kid
+Can check marks of students and variance value lower means everyone has almost same marks
+if the variance is higher that means, some kids are studying on their own. Same average with other school doesnt mean
+both schools give same kind of training. School with lower variance means all kids are getting same kind of training.
+--- choosing right stock to invest
+can check the variance and SD of daily stock rates of two companies to identify the volatility rates and see which one is more stable.
+Lower variance means that company is stable and hight variance means its not stable, its fluctuating.
+So those who wants to take less risks can go with stocks with less variance and SD
+
+- Correlation
+It is an index that tells relation between two data types
+it ranges from -1 -> 1
+-ve values means negetive correlation and 1 means maximum positive correlation
+and 0 means no corelation at all
+-- Example of square feet and price
+If we check the corelation it will be close to 1 because they are positively correlated. If squarefeet increase price also increase. if we do a scatterplot chart, 
+we can draw a line and datapoints will lie on same line or nearby that line
+if one variable increases, other variable also increases and same with decreasing values in positive correlation
+-- Radius and area of circle is another example of this positive corelation
+
+-- if you look at blood sugar and height as variables, there will not be any corelation because there is no relationship between them. Value will be either 0 or close to 0
+
+-- if you look at commute time and employee happiness, it will be negetively correlated.
+   higher the commute time lower the happiness index, so its -vely correlated
