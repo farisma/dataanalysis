@@ -1,0 +1,55 @@
+import pandas as pd
+df1 = pd.read_csv(r'/Users/andon/Documents/python data sets/LOTR.csv')
+df2 = pd.read_csv(r'/Users/andon/Documents/python data sets/LOTR 2.csv')
+
+MERGE
+---------------
+df1.merge(df2) #this will do inner join by default by looking at 
+#FellowshipID and FirstName as they are the common fields in both dataframes
+
+#we can also explicitly memntion which fields to be checked
+df1.merge(df2,how='inner',on='FellowshipID')
+#this will do it using just fellowshipid, so it will return firstname from both tables and show where as it will show first name just once
+
+#we can also pass multiple fields in a list to give the same result as df1.merge(df2)
+#df1.merge(df2,how='inner',on=['FellowshipID','FirstName'])
+
+#below will return all the values from both tables and merge the columns, wehere there are no values, it will put Nan
+df1.merge(df2,how='outer') 
+
+#will return all the values from df1 and overlapped values from df2
+df1.merge(df2,how='left') 
+
+#will return all the values from df2 and overlapped values from df1
+df1.merge(df2,how='right') 
+
+JOIN
+----------
+#other method is join, but it is not easy or seemless like merge
+#it doesnt take any parameters as default like in merge
+#so df1.join(df2) will return error
+df1.join(df2)
+
+#we need to explicitly specify everything in joins
+df1.join(df2,on='FellowshipID',how='outer',lsuffix='_Left',rsuffix='_Right')
+#above will retrn results, but still its not like merge, it will create separate rows for fields that are common as well in both dataframes
+# it wont merge like in merge, above lsuffix and rsuffix is to append with column names common in both dataframes, like firstname_left and firstname_right
+
+
+#inorder to do it like merge, we need to set index of both dataframes with FellowhsipID
+df4 = df1.set_index('FellowshipID').join(df2.set_index('FellowshipID'),on=['FellowshipID'],how='outer',lsuffix='_Left',rsuffix='_Right')
+#set index in new dataframe
+df4.set_index('FellowshipID')
+#now it will give the same result as merge
+
+CONCATENATE
+-------------
+#concatenation add one dataframe on top of other
+pd.concat([df1,df2]) - it wont merge, even the matched columns also will be added as new rows
+
+pd.concat([df1,df2],join="inner") #this will return only the columns that matches, means only the columns that are common in both dataframes
+
+pd.concat([df1,df2],join="outer") #this will return all columns, by default axis is 0, which means concatenate across rows
+
+pd.concat([df1,df2],join="outer",axis=1) #this will return all columns, axis 1 means it will concatenate across columns
+here the fields will be added as new columns like FellowshipID	FirstName	Skills FellowshipID	FirstName	Age, but axis-0 will not give firstname and fellowship id twice, columns will be merged in rows
