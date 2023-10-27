@@ -1,0 +1,57 @@
+import pandas as pd
+#this will remove header names and add indexes
+df = pd.read_csv(r'/Users/andon/Documents/filesort/compaies_uae.csv')
+
+#fetch rank < 10 rows
+df[df['Rank'] >10]
+
+#fetch column indiustries has either airline or transportation values
+industries = ['Airline','Transportation']
+df[df['Industry'].isin(industries)]
+
+#fetch rows that contain column headquarters contains dubai
+df[df['Headquarters'].str.contains("Dubai")]
+
+
+
+#above was filtering using columns
+#we can also index using index
+# 2 methods to do this, one is filter and other is using loc and iloc
+# loc stands for location and iloc stands for integer location
+
+#creating a new dataframe df2 with index as name column
+df2 = df.set_index('Name') - index is reset as name
+
+#Filter method
+df2.filter(items = ['Headquarters','Industry']) 
+#this will fetch just industry and headquarters
+
+#axis =1 is by default, no need to explicitly mention like below
+#axis 1 means, it will search for columns with titles headquarters and industry
+df2.filter(items = ['Headquarters','Industry'],axis=1) 
+
+#if axis=0 is given, it will search for those values in first column that is the index,
+#as we set name as index above, it will search each rows with name value headquarters or industry
+
+#using like to match some string in the whole word
+df2.filter(like = 'Bank', axis = 0)
+
+#Loc method
+#seaarch for location of DIB in name index, if it matches, all info from that row is fetched
+df2.loc['Dubai Islamic Bank']
+
+#iloc method - integer location
+# look for that position in the name index and fetch that row
+df2.loc[3]
+#above case, it will fetch all the values in the row 3
+
+#order by - below return all rows that has rank < 5 ordered by rank in descending order
+df[df['Rank'] < 5].sort_values(by='Rank',ascending=False)
+
+#can sort by two columns, like country continent, here we can do it with industry and Name, Headquarters and name
+df[df['Rank'] < 5].sort_values(by=['Industry','Name'],ascending=False)
+df[df['Rank'] < 5].sort_values(by=['Headquarters','Name'],ascending=False)
+
+#we can also put different orders for both columns, like ascending and descending
+df[df['Rank'] < 5].sort_values(by=['Headquarters','Name'],ascending=[False,True])
+
