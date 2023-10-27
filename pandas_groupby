@@ -1,0 +1,41 @@
+import pandas as pd
+#dataset https://github.com/AlexTheAnalyst/PandasYouTubeSeries/blob/main/Flavors.csv
+df = pd.read_csv(r'/Users/andon/Documents/python data sets/Flavors.csv')
+
+group_by_frame = df.groupby('Base Flavor')
+group_by_frame.mean() #this will retrun error because some columns are nonnumeric, so we need to fetch only the numeric columns
+
+#below is one method, there are other method as well
+df2 = df.filter(items=['Base Flavor','Flavor Rating','Texture Rating','Total Rating'])
+#we can also fetch this using below code
+df2 = df[['Base Flavor','Flavor Rating','Texture Rating','Total Rating']]
+
+group_by_frame = df2.groupby('Base Flavor')
+group_by_frame.mean()
+#this will give the mean of each columns grouped by base flavor
+
+#gives count of each group
+group_by_frame.count()
+
+#gives minimum of each group
+group_by_frame.min()
+#gives maximum of each group
+group_by_frame.min()
+
+#sum of each column in the grp
+group_by_frame.sum()
+
+#this will group by base flavour and gives mean, max, sum and count for each flavour rating and texture rating
+group_by_frame.agg({'Flavor Rating':['mean','max','sum','count'],'Texture Rating':['mean','max','sum','count']})
+
+df3 = df.filter(items=['Base Flavor','Flavor Rating','Texture Rating','Total Rating','Liked'])
+#below is to create multiple grouping
+group_by_two = df3.groupby(['Base Flavor','Liked'])
+group_by_two.mean()
+#above will group by base flavour first and then group by liked('yes' or 'no' values)
+
+#below will group as above and give mean, max etc
+group_by_two.agg({'Flavor Rating':['mean','max','sum','count']})
+
+#below will group by base flavour and will give all values like mean, mode, count, standard deviation, 25%, 50%, 75% etc
+df3.groupby('Base Flavor').describe()
