@@ -1,0 +1,51 @@
+import pandas as pd
+#CSV -  https://bit.ly/3CH1h8E
+#TXT - https://bit.ly/3RGqm7X
+#JSON - https://bit.ly/3RMvJTk
+#EXCEL - https://bit.ly/3ClvRmW
+df = pd.read_csv(r"C:\Users\alexf\OneDrive\Documents\Pandas Tutorial\countries of the world.csv")
+df = pd.read_table(r"C:\Users\alexf\OneDrive\Documents\Pandas Tutorial\countries of the world.csv", sep = ',')
+df = pd.read_json(r"C:\Users\alexf\OneDrive\Documents\Pandas Tutorial\json_sample.json")
+df2 = pd.read_excel(r"C:\Users\alexf\OneDrive\Documents\Pandas Tutorial\world_population_excel_workbook.xlsx", sheet_name = 'Sheet1')
+
+#by default it will not show all the rows, it will show  ... in the middle for both rows and columns
+#this is to show all the rows and columns
+pd.set_option('display.max.rows', 235)
+pd.set_option('display.max.columns', 40)
+
+#to get all info abou the dataframe
+df2.info()
+
+#to get the number of rows and columns
+df2.shape
+
+#top 10 rows
+df2.head(10)
+
+#bottom 10 rows
+df2.tail(10)
+
+#fetch certain column
+df2['Rank']
+
+#to fetch column that has value uzbekisthan (loc)
+df2.loc['Uzbekistan']
+
+#to fetch with index number (iloc)
+df2.iloc[224]
+
+#fetch all rows that has 3rd column == Dubai
+df[df[3] == "Dubai"]
+
+#fetch all columns that has industry column value as banking
+df2[df2['Industry'] == "Banking"]
+
+#fetch all rows that has rank > 10
+df[df['Rank'] >10]
+
+#fetch rows that has industries in list below
+industries = ['Airline','Transportation']
+df[df['Industry'].isin(industries)]
+
+#fetch rows that has head quarters contains Dubai
+df[df['Headquarters'].str.contains("Dubai")]
