@@ -1,0 +1,33 @@
+import pandas as pd
+df = pd.read_csv(r'/Users/andon/Documents/python data sets/world_population.csv', index_col='Country')
+
+#index is the label or name for each row, by default it will have 0,1,2,...
+# we can set the index with any column, it doesnt have to be unique but its bnetter to be unique
+# above we are seetting index as country. we can also set it using set_index function
+df.set_index('Country) #other method
+#this will set the country as the first column
+
+#this will reset index to default 0,1,2 etc, in place means it wont create another DF, existing df will be used.
+df.reset_index(inplace=True) 
+
+#to set index again
+df.set_index('Country',inplace=True)
+
+#we can use two ways to search after setting index
+#loc and iloc method
+
+df.loc['Zimbabwe'] - return the row with country value is zimbabwe
+df.iloc[1] - return the first row
+
+#can also set multiple indexes
+df.reset_index(inplace=True)
+
+df.set_index(['Continent','Country'],inplace=True)
+df.sort_index() - will sort on the basis of continent first and country next
+df.sort_index(ascending=False)
+
+df.loc['Albania'] #will return error because first index is continent and albania is not there
+#can meniton both indexes to get the correct result, this will search europe in continet and albania in country columns
+df.loc['Europe','Albania'] 
+
+df.iloc[1] #iloc will not work for multiindexing, it will return the item in the position mentioned based 
