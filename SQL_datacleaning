@@ -165,6 +165,4 @@ select * from PortfolioProject..NashvilleHousing
 alter table PortfolioProject..NashvilleHousing
 drop column SaleDate,OwnerAddress,LegalReference, TaxDistrict, PropertyAddress
 
-select *,row_number() over(
-partition by ParcelID,SalePrice order by UniqueID
-) as rownum from PortfolioProject..NashvilleHousing
+
