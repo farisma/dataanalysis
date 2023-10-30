@@ -1,0 +1,79 @@
+sql notes
+--format certain fields to correct data type
+convert(int, fieldname) 
+convert(int, fieldname) 
+
+--other method
+cast(fieldname as int)
+
+--Use temp table or CTE when we need to use some columns generated from other columns in the same query
+like we create a column called x by doing some calculation and need to use this x for some other calculation to do another column, we can't do that.
+so CTE and temp table can be used
+With PopvsVac (Continent, Location, Date, Population, New_Vaccinations, RollingPeopleVaccinated)
+as
+(
+Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
+, SUM(CONVERT(int,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
+--, (RollingPeopleVaccinated/population)*100
+From PortfolioProject..CovidDeaths dea
+Join PortfolioProject..CovidVaccinations vac
+	On dea.location = vac.location
+	and dea.date = vac.date
+where dea.continent is not null 
+--order by 2,3
+)
+Select *, (RollingPeopleVaccinated/Population)*100
+From PopvsVac
+
+--To find rolling sum of grouped columns, we can use SUM() over partition by (grouping fieldname order by some other fields)
+Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
+, SUM(CONVERT(int,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
+--, (RollingPeopleVaccinated/population)*100
+From PortfolioProject..CovidDeaths dea
+Join PortfolioProject..CovidVaccinations vac
+	On dea.location = vac.location
+	and dea.date = vac.date
+where dea.continent is not null 
+
+-- Creating View to store data for later visualizations
+
+Create View PercentPopulationVaccinated as
+Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
+, SUM(CONVERT(int,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
+--, (RollingPeopleVaccinated/population)*100
+From PortfolioProject..CovidDeaths dea
+Join PortfolioProject..CovidVaccinations vac
+	On dea.location = vac.location
+	and dea.date = vac.date
+where dea.continent is not null 
+
+-- assigning some values from one column to another column using a join query with same table and 
+  ISNULL(a.PropertyAddress,b.PropertyAddress)
+Update a
+SET PropertyAddress = ISNULL(a.PropertyAddress,b.PropertyAddress)
+From PortfolioProject.dbo.NashvilleHousing a
+JOIN PortfolioProject.dbo.NashvilleHousing b
+	on a.ParcelID = b.ParcelID
+	AND a.[UniqueID ] <> b.[UniqueID ]
+Where a.PropertyAddress is null
+
+-- break out strings using some delimiters
+SUBSTRING(PropertyAddress,1, charindex(',',PropertyAddress)-1) as propertyaddress, 
+SUBSTRING(PropertyAddress,charindex(',',PropertyAddress)+1,LEN(PropertyAddress)) as propertycity 
+
+-- PARSENAME is another function to separate strings
+parsename(replace(OwnerAddress,',','.'),1) - this 1 indicates first part of separated strings, if its 2, then seocnd part
+
+--remove duplicates
+row_number() is used for that in conjuction with over() partition by(fields order by uniquesid)
+any rownumber greater than one can be deleted
+with RowNumCTE AS(
+select *,row_number() over(
+partition by ParcelID,PropertyAddress,SalePrice,SaleDate,LegalReference order by UniqueID
+) as rownum from PortfolioProject..NashvilleHousing
+)
+--to select the duplicate rows
+--select * from RowNumCTE where rownum > 1
+--delete duplicate rows
+delete from RowNumCTE where rownum > 1
+
